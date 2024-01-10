@@ -1,10 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { text } from 'stream/consumers';
+import HomePage from '../pages/home.page';
 
 test.describe('Home', () => {
+    let homePage:HomePage;
     test('Open HomePage and Verify Title', async ({ page }) => {
+        homePage = new HomePage(page);
         //Open Url
-        await page.goto('https://practice.sdetunicorns.com/');
+        await homePage.navigate();
 
         //Verify title
         await expect(page).toHaveTitle('Practice E-Commerce Site – SDET Unicorns – Helping you succeed in Software Quality.');
@@ -21,23 +24,26 @@ test.describe('Home', () => {
     })
 
     test('Click get started button using CSS Selector', async ({ page }) => {
+        homePage = new HomePage(page);
         //Open Url
-        await page.goto('https://practice.sdetunicorns.com/');
+        await homePage.navigate();
 
         //Click the button
-        await page.locator('#get-started').click();
-
+        //await page.locator('#get-started').click();
+        await homePage.getStartedButton.click();
+    
         //Verify url has #get-started
         await expect(page).toHaveURL(/.*#get-started/);
         
     })
 
     test('Verify heading text is visible using text selector', async ({ page }) => {
+        homePage = new HomePage(page);
         //Open Url
-        await page.goto('https://practice.sdetunicorns.com/');
+        await homePage.navigate();
 
         //find the text locator-Make sure text is unique
-        const headingText =  page.locator('text=Think different. Make different.');
+        const headingText =  homePage.headingText;
 
         //Verify heading text is visible
          expect(headingText).toBeVisible;
@@ -46,12 +52,13 @@ test.describe('Home', () => {
 
     
     test('Verify home link is visible using text and css selector', async ({ page }) => {
+        homePage = new HomePage(page);
         //Open Url
-        await page.goto('https://practice.sdetunicorns.com/');
+        await homePage.navigate();
 
         //find the text locator-Make sure text is unique
         //const homeText = await page.locator('#primary-menu >> text=Home');
-        const homeText = page.locator('#primary-menu:has-text("Home")');
+        const homeText = await homePage.homeLink;
 
         //Verify heading text is visible
          expect(homeText).toBeVisible;
@@ -61,10 +68,10 @@ test.describe('Home', () => {
     
     test('Verify Search icon is visible or not using Xpath selector', async ({ page }) => {
         //Open Url
-        await page.goto('https://practice.sdetunicorns.com/');
+        await homePage.navigate();
 
         //find the search icon
-        const searchIcon =  page.locator('//div[@class="zak-header-actions zak-header-actions--desktop"]//div[@class="zak-header-action zak-header-search"]')
+        const searchIcon =  await homePage.searchIcon;
 
         //Verify search icon is visible
         expect(searchIcon).toBeVisible;
@@ -72,6 +79,7 @@ test.describe('Home', () => {
     })
     
     test('Verify the text for all nav links', async ({ page }) => {
+        homePage = new HomePage(page);
         const expectedLinks=[
             "Home",
             "About",
@@ -81,10 +89,10 @@ test.describe('Home', () => {
             "My account",
         ];
         //Open Url
-        await page.goto('https://practice.sdetunicorns.com/');
+        await homePage.navigate();
 
         //find the nav links
-        const navLinks =  page.locator('#zak-primary-menu li[id*=menu]')
+        const navLinks = await homePage.navlinks;
         //const navLinks =  page.locator('#zak-primary-menu li[id*=menu]').nth(3);
 
         //iterate and print out all the links - for of
@@ -99,61 +107,65 @@ test.describe('Home', () => {
     })
     
     test('Verify and assert the text after filling up the contact us', async ({ page }) => {
+        homePage = new HomePage(page);
         const name="MZ";
         const email="mz@gmail.com";
         const phone="7781114146";
         const message="hi there";
         //Open Url
-        await page.goto('https://practice.sdetunicorns.com/contact');
+        await homePage.navigate();
+
+        //Go to contact
+        await homePage.contactMenu.click();
 
         //Fill the form
-        await page.locator('#evf-277-field_ys0GeZISRs-1').fill(name);
-        await page.locator('#evf-277-field_LbH5NxasXM-2').fill(email);
-        await page.locator('#evf-277-field_66FR384cge-3').fill(phone);
-        await page.locator('#evf-277-field_yhGx3FOwr2-4').fill(message);
+        await homePage.formFillName.fill(name);
+        await homePage.formFillEmail.fill(email);
+        await homePage.formFillPhone.fill(phone);
+        await homePage.formFillMessage.fill(message);
 
-        await page.getByRole('button', { name: 'Submit' }).click();
+        await homePage.formFillSubmitBtn.click();
         
         //Verify success message
-        const successAlert=page.locator('div[role="alert"]');
+        const successAlert = homePage.formSubmitMessage;
         await expect(successAlert).toHaveText('Thanks for contacting us! We will be in touch with you shortly	');
     })
 
     test('Verify that you are able to click on Contact on the menu', async ({ page }) => {
+        homePage = new HomePage(page);
         function delay(ms: number) {
             return new Promise( resolve => setTimeout(resolve, ms) );
         }
 
         //Open Url
-       await page.goto('https://practice.sdetunicorns.com/');
+        await homePage.navigate();
 
        //Click on Contact
-       page.locator('(//a[normalize-space()="Contact"])[1]').click();
+       homePage.contactMenu.click();
 
        //await page.locator('#zak-primary-menu li[id*=menu]').nth(4).click();
        await expect(page).toHaveURL(/.*contact/);
      
        //const handle = await page.$('text=Submit');
 
-       await page.locator('#evf-277-field_ys0GeZISRs-1').hover();
-       await page.locator('#evf-277-field_ys0GeZISRs-1').click();
+       await homePage.formFillName.hover();
+       await homePage.formFillName.click();
 
        await page.keyboard.down('End');
-
-       await delay(5000);
     })
 
     test('Verify the number of links present in Recent posts in Blog page', async ({ page }) => {
+        homePage = new HomePage(page);
         function delay(ms: number) {
             return new Promise( resolve => setTimeout(resolve, ms) );
         }
 
         //Open Url
-       await page.goto('https://practice.sdetunicorns.com/');
+       await homePage.navigate();
        page.pause();
        //Click on Blog
-       page.locator('(//a[normalize-space()="Blog"])[1]').click();
-
+       await homePage.blogMenu.click();
+    
        //Verify url has blog
        await expect(page).toHaveURL(/.*blog/);
      
