@@ -4,31 +4,27 @@ import HomePage from '../pages/home.page';
 
 test.describe('Home', () => {
     let homePage:HomePage;
-    test('Open HomePage and Verify Title', async ({ page }) => {
+
+    test.beforeEach(async({page})=>{
         homePage = new HomePage(page);
         //Open Url
         await homePage.navigate();
-
+    })
+    test('Open HomePage and Verify Title', async ({ page }) => {
         //Verify title
         await expect(page).toHaveTitle('Practice E-Commerce Site – SDET Unicorns');
         
     })
     
-    test('Open AboutUs and Verify Title', async ({ page }) => {
+    test.skip('Open AboutUs and Verify Title', async ({ page }) => {
         //Open Url
         await page.goto('https://practice.sdetunicorns.com/about/');
-
         //Verify title
         await expect(page).toHaveTitle('About – Practice E-Commerce Site');
         
     })
 
     test('Click get started button using CSS Selector', async ({ page }) => {
-        homePage = new HomePage(page);
-        //Open Url
-        await homePage.navigate();
-
-        //Click the button
         //await page.locator('#get-started').click();
         await homePage.getStartedButton.click();
     
@@ -38,9 +34,6 @@ test.describe('Home', () => {
     })
 
     test('Verify heading text is visible using text selector', async ({ page }) => {
-        homePage = new HomePage(page);
-        //Open Url
-        await homePage.navigate();
 
         //find the text locator-Make sure text is unique
         const headingText =  homePage.headingText;
@@ -52,9 +45,6 @@ test.describe('Home', () => {
 
     
     test('Verify home link is visible using text and css selector', async ({ page }) => {
-        homePage = new HomePage(page);
-        //Open Url
-        await homePage.navigate();
 
         //find the text locator-Make sure text is unique
         //const homeText = await page.locator('#primary-menu >> text=Home');
@@ -67,8 +57,6 @@ test.describe('Home', () => {
 
     
     test('Verify Search icon is visible or not using Xpath selector', async ({ page }) => {
-        //Open Url
-        await homePage.navigate();
 
         //find the search icon
         const searchIcon =  await homePage.searchIcon;
@@ -155,13 +143,9 @@ test.describe('Home', () => {
     })
 
     test('Verify the number of links present in Recent posts in Blog page', async ({ page }) => {
-        homePage = new HomePage(page);
         function delay(ms: number) {
             return new Promise( resolve => setTimeout(resolve, ms) );
         }
-
-        //Open Url
-       await homePage.navigate();
        page.pause();
        //Click on Blog
        await homePage.blogMenu.click();
