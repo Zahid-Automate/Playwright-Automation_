@@ -10,7 +10,7 @@ test.describe('Home', () => {
         await homePage.navigate();
 
         //Verify title
-        await expect(page).toHaveTitle('Practice E-Commerce Site – SDET Unicorns – Helping you succeed in Software Quality.');
+        await expect(page).toHaveTitle('Practice E-Commerce Site – SDET Unicorns');
         
     })
     
