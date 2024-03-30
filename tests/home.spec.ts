@@ -57,13 +57,11 @@ test.describe('Home', () => {
 
     
     test('Verify Search icon is visible or not using Xpath selector', async ({ page }) => {
-
         //find the search icon
-        const searchIcon =  await homePage.searchIcon;
-
+        const searchIcon = homePage.searchIcon;
         //Verify search icon is visible
         expect(searchIcon).toBeVisible;
-        
+    
     })
     
     test('Verify the text for all nav links', async ({ page }) => {
