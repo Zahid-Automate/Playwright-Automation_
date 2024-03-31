@@ -24,6 +24,14 @@ class ContactPage{
     async navigate(){
         await this.page.goto('/contact');
     }
+
+    async submitForm(name: string, email: string, phone: string, message: string) {
+        await this.formFillName.fill(name);
+        await this.formFillEmail.fill(email);
+        await this.formFillPhone.fill(phone);
+        await this.formFillMessage.fill(message);
+        await this.formFillSubmitBtn.click();
+      }
 }
 
 export default ContactPage;
